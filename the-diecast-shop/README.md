@@ -31,7 +31,7 @@ NOTE : disini saya melakukan deployment saat PWS masih sedang error dan itu suda
 
 ## Request Client ke Web Aplikasi Berbasis Django
 
-![image](Screenshot 2024-09-11 082118)
+![image](Screenshot 2024-09-11 082118.png)
 https://www.canva.com/design/DAGQaVKWqVw/UOididZ0zkWlrKeqb3VXSQ/edit?utm_content=DAGQaVKWqVw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## Fungsi Git pada Pengembangan Perangkat Lunak

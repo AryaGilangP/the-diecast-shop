@@ -10,15 +10,15 @@ link : https://arya-gilang-thediecastshop.pbp.cs.ui.ac.id/
 
 **Membuat project django baru**
 1. membuat repository Github baru bernama 'the-diecast-shop'
-2. clone repository kosong ke komputer lokal dengan perintah '''git clone https://github.com/AryaGilangP/the-diecast-shop'''
-3. menghubungkan penyimpanan lokal dengan Github '''git remote add origin https://github.com/AryaGilangP/the-diecast-shop'''
+2. clone repository kosong ke komputer lokal dengan perintah **git clone https://github.com/AryaGilangP/the-diecast-shop**
+3. menghubungkan penyimpanan lokal dengan Github **git remote add origin https://github.com/AryaGilangP/the-diecast-shop**
 4. membuat virtual enviroment dan mengaktifkannya
 5. membuat file bernama `requirements.txt` lalu menginstall dependensi yang ada di file tersebut
 6. buat project django baru 
-7. menjalankan server dengan mengubah isi dari allowed hosts, lalu memeriksanya di '''http://localhost:8000'''
+7. menjalankan server dengan mengubah isi dari allowed hosts, lalu memeriksanya di 'http://localhost:8000''
 
 **Membuat aplikasi dengan nama 'main' pada project tersebut
-lalu mendaftarkannya ke dalam 'INSTALLED_APPS'
+lalu mendaftarkannya ke dalam 'INSTALLED_APPS'***
 
 **Melakukan routing pada 'main' agar dapat menjalankan aplikasi**
 hal ini dilakukan agar web yang kita buat dapat diakses melalui web

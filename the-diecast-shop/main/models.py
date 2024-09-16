@@ -7,3 +7,4 @@ class MoodEntry(models.Model):
     model_number = models.IntegerField()
     user_reviews = models.TextField(max_length=1000)
 
+# buat push baru

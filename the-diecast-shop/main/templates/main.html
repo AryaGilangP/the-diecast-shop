@@ -1,5 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
 
-<!-- <h1>{{ app }}</h1>
+<h1>{{ app }}</h1>
 
 <h5>Name: </h5>
 <p>{{ name }}<p>
@@ -10,46 +12,37 @@
 <h5>Description: </h5>
 <p>{{ description }}<p>
 <h5>Model Number: </h5>
-<p>{{ model_number }}<p> -->
+<p>{{ model_number }}<p>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ app }}</title>
-        <style>
-            h1 {
-            font-family: 'Arial', sans-serif;
-        }
-            h5 {
-            font-family: 'Times New Roman', Times, serif;
-        }
-            p {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-        }
-        </style>
-    </head>
-    <body>
-        <h1>{{ app }}</h1>
+    {% if not car_items %}
+    <p>Belum ada data item mobil diecast.</p>
+    {% else %}
+    <table>
+      <tr>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Model Number</th>
+        <th>User Reviews</th>
+      </tr>
     
-        <h5>Name:</h5>
-        <p>{{ name }}</p>
+      {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini 
+      {% endcomment %} 
+      {% for item in items %}
+      <tr>
+        <td>{{ item.price }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.model_number }}</td>
+        <td>{{ item.user_reviews }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
     
-        <h5>Class:</h5>
-        <p>{{ class }}</p>
+    <br />
     
-        <h5>Price:</h5>
-        <p>{{ price }}</p>
+    <a href="{% url 'main:create_car_item' %}">
+      <button>Add New Car Item</button>
+    </a>
     
-        <h5>Description:</h5>
-        <p>{{ description }}</p>
-    
-        <h5>Model Number:</h5>
-        <p>{{ model_number }}</p>
+    {% endblock content %}
 
-        <h5>User Review:</h5>
-        <p>{{ user_reviews }}</p>
-    </body>
-    </html>
-    

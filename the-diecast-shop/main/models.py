@@ -1,10 +1,10 @@
+import uuid
 from django.db import models
 
-class MoodEntry(models.Model):
-    name = models.CharField(max_length=70)
+class CarItems(models.Model):
+    name = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     price = models.IntegerField()
     description = models.TextField(max_length=2000)
     model_number = models.IntegerField()
     user_reviews = models.TextField(max_length=1000)
 
-# buat push baru

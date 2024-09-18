@@ -23,7 +23,7 @@ link : https://arya-gilang-thediecastshop.pbp.cs.ui.ac.id/
 7. menjalankan server dengan mengubah isi dari allowed hosts, lalu memeriksanya di **http://localhost:8000**
 
 **Membuat aplikasi dengan nama `main` pada project tersebut
-lalu mendaftarkannya ke dalam `INSTALLED_APPS` **
+lalu mendaftarkannya ke dalam `INSTALLED_APPS`**
 
 **Melakukan routing pada 'main' agar dapat menjalankan aplikasi**
 hal ini dilakukan agar web yang kita buat dapat diakses melalui web
@@ -58,6 +58,7 @@ Password: 1JGdfEwT7KUiGHaJOvMWtGj0IrsEYnSA
   <summary></summary>
 
 **Membuat input form untuk menambahkan objek model pada app sebelumnya.**  
+
 dimulai dengan membuat `forms.py` pada untuk membuat forms yang bisa menerima data baru. Form menggunakan model `CarItems` yang mencakup field yang relevan. Setelah itu kita perbarui kode `views.py` dengan menambahkan fungsi `create_car_items`yang dapat menerima data, memvalidasi input, serta menyimpan data tersebut. Lalu ketika berhasil aka aka di redirect ke halaman utama, dan `views.py` dan `main.html` dimodifikasi untuk menampilkan semua item mobil yang sudah dibuat.
 
 **Tambahkan 4 fungsi views baru untuk melihat objek yang sudah ditambahkan dalam format XML, JSON, XML by ID, dan JSON by ID.**
@@ -96,6 +97,7 @@ menambahkan fungsi `show_xml` yang mengambil seluruh data dari entry `CarItems` 
       ``` 
 
 **Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2.**  
+
 URL ditambahkan pada file `urls.py` spaya fungsi pada `views.py` bisa diakses.
 
 ```

@@ -4,7 +4,7 @@ NPM : 2306221970
 
 Kelas : PBP F
 
-link : https://arya-gilang-thediecastshop.pbp.cs.ui.ac.id/
+link : https://arya-gilang-thediecastshops.pbp.cs.ui.ac.id
 
 ## README UNTUK TUGAS 2
 

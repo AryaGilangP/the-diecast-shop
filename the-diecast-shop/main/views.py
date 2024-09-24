@@ -15,29 +15,33 @@ from main.models import CarItems
 
 @login_required(login_url='/login')
 def show_main(request):
-    items = CarItems.objects.all()
+    car_items = CarItems.objects.filter(user=request.user)  
+
     context = {
-        'app': 'Mobil Kecil',
-        'name': 'Arya Gilang Prasetya',
+        'app': 'FUFUFAFA CARS',
+        'name': request.user.username,
+        'car_items': car_items,
         'class': 'PBP F',
+        'NPM': '2306221970',
         'price': '50.000',
-        'description':'model ini memiliki warna hitam pekat, dengan detail berupa lampu depan dan belakang.\n'
+        'description': 'model ini memiliki warna hitam pekat, dengan detail berupa lampu depan dan belakang.\n'
                         'model ini juga memiliki fitur untuk membuka dan menutup pintu samping dan kap mesinnya.',
-        'model_number':'12345',
-        'user_reviews':'produk mobil diecast ini sangat bagus dan memiliki detail yang menarik. barang ori dan berkualitas bintang lima.',
-        'mood_entries': create_car_item,
-        'last_login': request.COOKIES['last_login'],
-        
+        'model_number': '12345',
+        'user_reviews': 'produk mobil diecast ini sangat bagus dan memiliki detail yang menarik. barang ori dan berkualitas bintang lima.',
+        'last_login': request.COOKIES.get('last_login'),
     }
 
     return render(request, "main.html", context)
+
 
 def create_car_item(request):
     form = CarItemsForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        form.save()
-        return redirect('main:show_main')  # Redirect ke tampilan yang sesuai
+        car_item = form.save(commit=False)
+        car_item.user = request.user
+        car_item.save()
+        return redirect('main:show_main')
 
     context = {'form': form}
     return render(request, "create_car_item.html", context)
@@ -88,13 +92,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('main:login')
-
-
-# Ubah fungsi logout_user menjadi seperti potongan kode berikut.
-
-# def logout_user(request):
-#     logout(request)
-#     response = HttpResponseRedirect(reverse('main:login'))
-#     response.delete_cookie('last_login')
-#     return response
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response

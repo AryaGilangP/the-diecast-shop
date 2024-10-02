@@ -6,6 +6,9 @@ Kelas : PBP F
 
 link : https://arya-gilang-thediecastshops.pbp.cs.ui.ac.id
 
+atha.nextkabiro2025
+gilangiyan.nextdeputi2025
+
 ## README UNTUK TUGAS 2
 
 <details>
@@ -252,5 +255,255 @@ Django menggunakan session dan cookies untuk mengingat pengguna yang telah login
 Cara kerjanya adalah saat pengguna berhasil login, Django menyimpan session ID di cookie browser.
 Django kemudian mengaitkan session ID tersebut dengan data pengguna yang diotentikasi.
 Setiap permintaan berikutnya dari pengguna akan menyertakan session ID ini dalam cookie, sehingga Django dapat mengetahui siapa pengguna tersebut dan memuat data yang relevan dari session.
+
+</details>
+
+## README UNTUK TUGAS 5
+
+<details>
+<summary></summary>
+
+## Implementasi hapus dan edit produk
+
+Membuat fungsi `edit_car` yang menerima parameter request dan id, lalu melakukan import pada `views.py` dan membuat file baru `edit_car.html`
+Lalu import fungsi `edit_car` pada `urls.py`
+```
+def edit_car(request, id):
+    car = CarItems.objects.get(pk=id)
+    form = CarItemsForm(request.POST or None, instance=car)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_car.html", context)
+```
+```
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Edit Car</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="flex flex-col min-h-screen bg-gray-100">
+  <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-black">Edit Car Item</h1>
+  
+    <div class="bg-white rounded-lg p-6 form-style">
+      <form method="POST" class="space-y-6">
+          {% csrf_token %}
+          {% for field in form %}
+              <div class="flex flex-col">
+                  <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">
+                      {{ field.label }}
+                  </label>
+                  <div class="w-full">
+                      {{ field }}
+                  </div>
+                  {% if field.help_text %}
+                      <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                  {% endif %}
+                  {% for error in field.errors %}
+                      <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                  {% endfor %}
+              </div>
+          {% endfor %}
+          <div class="flex justify-center mt-6">
+              <button type="submit" class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out w-full">
+                  Edit Car Item
+              </button>
+          </div>
+      </form>
+  </div>
+  </div>
+</div>
+{% endblock %}
+```
+
+Membuat fungsi `delete_car` yang menerima parameter request dan id, lalu melakukan import pada `views.py`
+Lalu import fungsi `delete_car` pada `urls.py`
+```
+def delete_car(request, id):
+    # Get car berdasarkan id
+    car = CarItems.objects.get(pk = id)
+    # Hapus mood
+    car.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
+```
+
+## Kustomisasi halaman login, register, dan tambah product semenarik mungkin.
+
+Untuk login, aku merubah warna utama menjadi hitam dan merah, serta menambahkan background image
+Untuk register page, aku juga memberikan background hitam dan box berwarna biru oligarki untuk register nya
+
+## Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
+
+```
+<nav class="bg-red-600 shadow-lg fixed top-0 left-0 z-40 w-full">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <h1 class="text-2xl font-bold text-center text-white"> FUFUFAFA STORE </h1>
+      </div>
+      <!-- Versi desktop -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="#" class="text-white">Home</a>
+        <a href="#" class="text-white">Products</a>
+        <a href="#" class="text-white">Categories</a>
+        <a href="#" class="text-white">Cart</a>
+        {% if user.is_authenticated %}
+          <span class="text-gray-300">Welcome, {{ user.username }}</span>
+          <a href="{% url 'main:logout' %}" class="text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Logout
+          </a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Login
+          </a>
+        {% endif %}
+      </div>
+      <!-- Tombol hamburger untuk mobile -->
+      <div class="md:hidden flex items-center">
+        <button class="mobile-menu-button">
+          <svg class="w-6 h-6 text-white" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Menu mobile -->
+  <div class="mobile-menu hidden md:hidden bg-red-600">
+    <a href="#" class="block px-4 py-2 text-white">Home</a>
+    <a href="#" class="block px-4 py-2 text-white">Products</a>
+    <a href="#" class="block px-4 py-2 text-white">Categories</a>
+    <a href="#" class="block px-4 py-2 text-white">Cart</a>
+    {% if user.is_authenticated %}
+      <span class="block text-gray-300 px-4 py-2">Welcome, {{ user.username }}</span>
+      <a href="{% url 'main:logout' %}" class="block text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+        Logout
+      </a>
+    {% else %}
+      <a href="{% url 'main:login' %}" class="block text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+        Login
+      </a>
+    {% endif %}
+  </div>
+  <script>
+    const btn = document.querySelector("button.mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  </script>
+</nav>
+
+```
+
+## Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+Inline CSS – Gaya yang ditulis langsung di dalam atribut `style` di elemen HTML memiliki prioritas tertinggi.
+
+Contoh:
+```
+<p style="color: red;">Text</p>
+```
+
+ID Selector (`#id`) – Selector yang menggunakan `id` memiliki prioritas di bawah inline CSS.
+
+Contoh:
+```
+#header { color: blue; }
+```
+
+Class Selector (`.class`), Attribute Selector (`[type="text"]`), Pseudo-class Selector (`:hover`) – Semua jenis selector ini memiliki prioritas di bawah ID selector.
+
+Contoh:
+```
+.button { color: green; }
+```
+
+Type Selector (Tag) – Selector yang hanya menggunakan tag HTML, seperti `div`, `p`, atau `h1`, memiliki prioritas yang lebih rendah.
+
+Contoh:
+```
+h1 { color: black; }
+```
+
+Universal Selector (`*`) dan Inherited Properties – Selector yang paling lemah, digunakan sebagai fallback dan default style.
+
+Contoh:
+```
+* { margin: 0; padding: 0; }
+```
+
+## Mengapa Responsive Design Penting dalam Pengembangan Aplikasi Web?
+
+Responsive Design penting untuk pengabangan aplikasi web karena akan secara langsung mempengaruhi pengalaman pengguna. Dengan responsive design, pengguna dapat mengakses aplikasi atau situs web dengan nyaman di berbagai perangkat tanpa perlu memperbesar atau menggulir secara horizontal.
+Selain itu, responsive design juga berhubungan dengan SEO (SEO friendly), sebab aplikasi web dengan desain responsif akan lebih diutamakan dalam peringkat hasil pencarian, terutama pada pencarian perangkat mobile.
+
+Contoh aplikasi yang sudah menerapkan Responsive Design:
+1. YouTube : dapat menyesuaikan untuk layar desktop maupun layar mobile.
+2. Twitter : layout nya menyesuaikan sesuai dengan ukuran layar misal membuka di desktop maupun di mobile.
+Contoh aplikasi yang belum menerapkan Responsive Design: 
+1. 
+
+## Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+1. **Margin** 
+Ruang di luar border elemen yang berfungsi untuk menentukan jarak antar elemen dengan elemen lainnya. Implementasi margin adalah dengan `margin-top` ,`margin-right` , `margin-bottom` , dan `margin-left`.
+
+```
+.contoh{
+  margin: 20px; /* Jarak 10px dari elemen lain di sekitarnya */
+}
+```
+
+2. **Border**
+Garis di sekeliling elemen yang memisahkan padding dan margin. Implementasi border adalah dengan `border-top` , `border-right` , `border-bottom` , dan `border-left`.
+
+```
+.contoh {
+  border: 2px solid #000 /* Border hitam dengan ketebalan 2px */
+}
+```
+
+3. **Padding**
+Ruang di dalam elemen antara konten elemen dan border elemen tersebut, atau jarak antara isi elemen dengan tepi elemen itu sendiri. Implementasinya adalah dengan `padding-top` , `padding-right` , `padding-bottom` , dan `padding-left`.
+
+```
+.contoh {
+    margin: 10px; /* Jarak antara elemen lain */
+    border: 2px solid black; /* Border tebal 2px */
+    padding: 15px; /* Jarak antara konten dan tepi dalam elemen */s
+}
+```
+
+## Flex Box, Grid Layout dan kegunaannya
+
+Flex Box memungkinkan elemen-elemen dalam container untuk menyesuaikan diri dengan ukuran dan orientasi yang fleksibel, cocok untuk layout linear seperti pengaturan navbar, form, grid sederhana, atau elemen dalam satu baris. Contoh properti nya adalah `flex-direction`, `justify-content`, dan `align-items`.
+Contoh : 
+```
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+Grid Layout memungkinkan pengaturan elemen dengan memanfaatkan baris dan kolom. Grid layout cocok untuk layout kompleks seperti dashboard (menyusun widget) atau galeri (mengatur gambar dalam kolom dan baris). Contoh propertinya adalah `grid-template-columns`, `grid-template-rows`, dan `grid-area`.
+Contoh : 
+```
+.container {
+  display: grid;
+  grid-template-columns: 200px 200px;
+  grid-gap: 10px;
+}
+```
 
 </details>

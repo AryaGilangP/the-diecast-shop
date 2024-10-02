@@ -1,55 +1,57 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>FUFUFAFA STORE</title>
+{% endblock meta %}
 {% block content %}
+{% include 'navbar.html' %}
+<!-- Mengubah background menjadi hitam -->
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-black flex flex-col">
+  <div class="p-2 mb-6 relative">
+    <!-- Grid dengan tiga kolom untuk tampilan desktop, satu kolom untuk mobile -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Kotak informasi tetap putih -->
+      <div class="bg-white shadow-md p-4 rounded-lg">
+        <h2 class="card-info-title text-black">NPM</h2>
+        <p class="card-info-value text-black">{{ NPM }}</p>
+      </div>
+      <div class="bg-white shadow-md p-4 rounded-lg">
+        <h2 class="card-info-title text-black">Name</h2>
+        <p class="card-info-value text-black">{{ name }}</p>
+      </div>
+      <div class="bg-white shadow-md p-4 rounded-lg">
+        <h2 class="card-info-title text-black">Class</h2>
+        <p class="card-info-value text-black">{{ class }}</p>
+      </div>
+    </div>
+  </div>
 
-<h1>{{ app }}</h1>
+  <div class="px-3 mb-4">
+    <!-- Mengubah latar belakang menjadi merah -->
+    <div class="flex rounded-md items-center bg-red-600 py-2 px-4 w-fit">
+      <h1 class="text-white text-center">Last Login: {{last_login}}</h1>
+    </div>
+  </div>
 
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>Class: </h5>
-<p>{{ class }}<p>
-<h5>NPM </h5>
-<p>{{ npm }}<p>
-<h5>Price </h5>
-<p>{{ price }}<p>
-<h5>Description: </h5>
-<p>{{ description }}<p>
-<h5>Model Number: </h5>
-<p>{{ model_number }}<p>
-
-    {% if not car_items %}
-    <p>Belum ada data item mobil diecast.</p>
-    {% else %}
-    <table>
-      <tr>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Model Number</th>
-        <th>User Reviews</th>
-      </tr>
-    
-      {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini 
-      {% endcomment %} 
-      {% for item in items %}
-      <tr>
-        <td>{{ item.price }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.model_number }}</td>
-        <td>{{ item.user_reviews }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% endif %}
-    
-    <br />
-    
-    <a href="{% url 'main:create_car_item' %}">
-      <button>Add New Car Item</button>
+  <div class="flex justify-end mb-6">
+    <!-- Mengubah tombol menjadi merah -->
+    <a href="{% url 'main:create_car_item' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+      Add New Car Item
     </a>
+  </div>
 
-    <a href="{% url 'main:logout' %}">
-      <button>Logout</button>
-    </a>
-    <h5>Sesi terakhir login: {{ last_login }}</h5> 
-    {% endblock content %}
-
-<!-- arya.gilang1 - abcdef123456 -->
+  {% if not car_items %}
+  <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+    <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+    <p class="text-center text-white-600 mt-4 text-white">Belum ada data produk pada FUFUFAFA STORE.</p>
+  </div>
+  {% else %}
+  <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
+    {% for car_item in car_items %}
+      {% include 'card_car.html' with car_item=car_item %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

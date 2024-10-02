@@ -7,8 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.shortcuts import render, redirect 
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers 
 from main.forms import CarItemsForm
 from main.models import CarItems
@@ -23,11 +23,6 @@ def show_main(request):
         'car_items': car_items,
         'class': 'PBP F',
         'NPM': '2306221970',
-        'price': '50.000',
-        'description': 'model ini memiliki warna hitam pekat, dengan detail berupa lampu depan dan belakang.\n'
-                        'model ini juga memiliki fitur untuk membuka dan menutup pintu samping dan kap mesinnya.',
-        'model_number': '12345',
-        'user_reviews': 'produk mobil diecast ini sangat bagus dan memiliki detail yang menarik. barang ori dan berkualitas bintang lima.',
         'last_login': request.COOKIES.get('last_login'),
     }
 
@@ -38,13 +33,35 @@ def create_car_item(request):
     form = CarItemsForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
+        print("Form valid, menyimpan car_item")  # Debugging
         car_item = form.save(commit=False)
         car_item.user = request.user
         car_item.save()
         return redirect('main:show_main')
 
+
     context = {'form': form}
     return render(request, "create_car_item.html", context)
+
+def edit_car(request, id):
+    car = CarItems.objects.get(pk=id)
+    form = CarItemsForm(request.POST or None, instance=car)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_car.html", context)
+
+
+def delete_car(request, id):
+    # Get car berdasarkan id
+    car = CarItems.objects.get(pk = id)
+    # Hapus mood
+    car.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 def show_xml(request):
     data = CarItems.objects.all()

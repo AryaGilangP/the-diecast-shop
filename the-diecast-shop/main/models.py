@@ -7,7 +7,7 @@ class CarItems(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     price = models.IntegerField()
-    description = models.TextField(max_length=2000)
+    description = models.TextField(max_length=250)
     model_number = models.IntegerField()
-    user_reviews = models.TextField(max_length=1000)
+    user_reviews = models.TextField(max_length=500)
 

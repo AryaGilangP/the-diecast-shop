@@ -10,4 +10,5 @@ class CarItems(models.Model):
     description = models.TextField(max_length=250)
     model_number = models.IntegerField()
     user_reviews = models.TextField(max_length=500)
+    image_url = models.URLField(max_length=500, null=True, blank=True)
 

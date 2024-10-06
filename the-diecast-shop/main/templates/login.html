@@ -6,9 +6,17 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center w-screen bg-cover bg-center py-12 px-4 sm:px-6 lg:px-8" style="background-image: url('{% static 'image/fufufafa-bg.jpg' %}')">
-  <!-- Menghapus kotak putih -->
-  <div class="max-w-md w-full space-y-8">
+<!-- Container utama dengan video sebagai background -->
+<div class="min-h-screen flex items-center justify-center w-screen py-12 px-4 sm:px-6 lg:px-8 relative">
+
+  <!-- Video background -->
+  <video autoplay muted loop id="bg-video" class="absolute inset-0 object-cover w-full h-full z-0">
+    <source src="{% static 'video/fufufafa-bg.mp4' %}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Konten login di atas video -->
+  <div class="relative z-10 max-w-md w-full space-y-8">
     <div>
       <h2 class="mt-6 text-center text-red-600 text-3xl font-extrabold">
         Login to your account
@@ -47,4 +55,17 @@
     </div>
   </div>
 </div>
+
+<!-- Tambahkan styling untuk video -->
+<style>
+  #bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+</style>
 {% endblock content %}

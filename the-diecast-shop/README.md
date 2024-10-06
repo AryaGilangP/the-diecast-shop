@@ -4,7 +4,10 @@ NPM : 2306221970
 
 Kelas : PBP F
 
-link : https://arya-gilang-thediecastshops.pbp.cs.ui.ac.id
+link : http://pbp.cs.ui.ac.id/arya.gilang/fufufafashop
+
+Username: arya.gilang
+Password: zBOBx6IUQKGmfPj4rJg2tpXAHSud_w4d
 
 atha.nextkabiro2025
 gilangiyan.nextdeputi2025

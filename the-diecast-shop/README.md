@@ -510,3 +510,258 @@ Contoh :
 ```
 
 </details>
+
+
+
+## README UNTUK TUGAS 6
+
+<details>
+  <summary></summary>
+
+## Mengubah kode agar dapat mendukung AJAX GET
+
+1. Diubah untuk mendapatkan data produk menggunakan AJAX GET dari endpoint yang menampilkan produk dalam format JSON.
+```
+async function getCarItems() {
+    return fetch("{% url 'main:show_json' %}") 
+    .then((res) => res.json()) 
+}
+```
+
+2. Membuat Fungsi untuk Melakukan render Data Produk ke dalam Card
+Setelah mendapatkan data produk, kita perlu merender data tersebut ke dalam bentuk HTML (card). Data ini diambil dari JSON yang diterima dari server.
+```
+<script>
+    ...
+ async function refreshMoodEntries() {
+    document.getElementById("mood_entry_cards").innerHTML = "";
+    document.getElementById("mood_entry_cards").className = "";
+    const moodEntries = await getMoodEntries();
+    let htmlString = "";
+    let classNameString = "";
+
+    if (moodEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-gray-600 mt-4">Belum ada data mood pada mental health tracker.</p>
+            </div>
+        `;
+    }
+    else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+        moodEntries.forEach((item) => {
+            htmlString += `
+            <div class="relative break-inside-avoid">
+                <div class="absolute top-2 z-10 left-1/2 -translate-x-1/2 flex items-center -space-x-2">
+                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+                    <div class="w-[3rem] h-8 bg-gray-200 rounded-md opacity-80 -rotate-90"></div>
+                </div>
+                <div class="relative top-5 bg-indigo-100 shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                    <div class="bg-indigo-200 text-gray-800 p-4 rounded-t-lg border-b-2 border-indigo-300">
+                        <h3 class="font-bold text-xl mb-2">${item.fields.mood}</h3>
+                        <p class="text-gray-600">${item.fields.time}</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="font-semibold text-lg mb-2">My Feeling</p>
+                        <p class="text-gray-700 mb-2">
+                            <span class="bg-[linear-gradient(to_bottom,transparent_0%,transparent_calc(100%_-_1px),#CDC1FF_calc(100%_-_1px))] bg-[length:100%_1.5rem] pb-1">${item.fields.feelings}</span>
+                        </p>
+                        <div class="mt-4">
+                            <p class="text-gray-700 font-semibold mb-2">Intensity</p>
+                            <div class="relative pt-1">
+                                <div class="flex mb-2 items-center justify-between">
+                                    <div>
+                                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+                                            ${item.fields.mood_intensity > 10 ? '10+' : item.fields.mood_intensity}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                    <div style="width: ${item.fields.mood_intensity > 10 ? 100 : item.fields.mood_intensity * 10}%;" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-0 -right-4 flex space-x-1">
+                    <a href="/edit-mood/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                    </a>
+                    <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            `;
+        });
+    }
+    document.getElementById("mood_entry_cards").className = classNameString;
+    document.getElementById("mood_entry_cards").innerHTML = htmlString;
+}
+refreshMoodEntries();
+</script>
+```
+
+3. Membuat Modal Sebagai Form untuk Menambahkan Mood
+```
+...
+<div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+  <div id="crudModalContent" class="relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 border-b rounded-t">
+      <h3 class="text-xl font-semibold text-gray-900">
+        Add New Mood Entry
+      </h3>
+      <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <div class="px-6 py-4 space-y-6 form-style">
+      <form id="moodEntryForm">
+        <div class="mb-4">
+          <label for="mood" class="block text-sm font-medium text-gray-700">Mood</label>
+          <input type="text" id="mood" name="mood" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter your mood" required>
+        </div>
+        <div class="mb-4">
+          <label for="feelings" class="block text-sm font-medium text-gray-700">Feelings</label>
+          <textarea id="feelings" name="feelings" rows="3" class="mt-1 block w-full h-52 resize-none border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Describe your feelings" required></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="moodIntensity" class="block text-sm font-medium text-gray-700">Mood Intensity (1-10)</label>
+          <input type="number" id="moodIntensity" name="mood_intensity" min="1" max="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+        </div>
+      </form>
+    </div>
+    <!-- Modal footer -->
+    <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+      <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+      <button type="submit" id="submitMoodEntry" form="moodEntryForm" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">Save</button>
+    </div>
+  </div>
+</div>
+...
+```
+
+4. Menambahkan Data Mood dengan AJAX
+```
+<script>
+  function addMoodEntry() {
+    fetch("{% url 'main:add_mood_entry_ajax' %}", {
+      method: "POST",
+      body: new FormData(document.querySelector('#moodEntryForm')),
+    })
+    .then(response => refreshMoodEntries())
+
+    document.getElementById("moodEntryForm").reset(); 
+    document.querySelector("[data-modal-toggle='crudModal']").click();
+
+    return false;
+  }
+...
+</script>
+```
+
+Lalu menambah sebuah event listener
+
+```
+<script>
+...
+document.getElementById("moodEntryForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    addMoodEntry();
+  })
+</script>
+```
+
+5. Melindungi Aplikasi dari Cross Site Scripting (XSS)
+Menambahkan `strip_tags` untuk "Membersihkan" Data Baru
+
+```
+...
+@csrf_exempt
+@require_POST
+def add_mood_entry_ajax(request):
+    mood = strip_tags(request.POST.get("mood")) # strip HTML tags!
+    feelings = strip_tags(request.POST.get("feelings")) # strip HTML tags!
+    ...
+```
+lalu menambahkan kedua method baru
+```
+...
+class MoodEntryForm(ModelForm):
+    class Meta:
+        ...
+    
+    def clean_mood(self):
+        mood = self.cleaned_data["mood"]
+        return strip_tags(mood)
+
+    def clean_feelings(self):
+        feelings = self.cleaned_data["feelings"]
+        return strip_tags(feelings)
+...
+```
+
+6. Membersihkan Data dengan DOMPurify
+
+Menambahkan ini pada `main.html`
+```
+{% block meta %}
+...
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+...
+{% endblock meta %}
+```
+
+Menambahkan ini pada `refreshCarEntry`
+```
+<script>
+    ...
+    async function refreshMoodEntries() {
+        ...
+        moodEntries.forEach((item) => {
+            const mood = DOMPurify.sanitize(item.fields.mood);
+            const feelings = DOMPurify.sanitize(item.fields.feelings);
+            ...
+        });
+        ...
+    }
+    ...
+</script>
+```
+
+## Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+1. **Interaktif Dinamis :** JavaScript memungkinkan pengembang untuk menciptakan interaksi dinamis di halaman web, seperti menampilkan atau menyembunyikan elemen, validasi form secara real-time, animasi, dan efek interaktif. 
+
+2. **Usability :** JavaScript meningkatkan user experience dengan memungkinkan perubahan pada halaman secara real-time tanpa harus memuat ulang seluruh halaman. Misalnya, saat mengisi formulir, JavaScript bisa langsung menerapkan perubahan tanpa perlu memuat ulang halaman.
+
+3. **Validasi Formulir di Sisi Klien :** JavaScript sangat berguna untuk melakukan validasi form di sisi pengguna sebelum data dikirim ke server. Hal ini mengurangi beban server dan memberikan umpan balik langsung kepada pengguna jika ada kesalahan
+
+## Jelaskan fungsi dari penggunaan `await` ketika kita menggunakan `fetch()` Apa yang akan terjadi jika kita tidak menggunakan `await`?
+Fungsi dari penggunaan `await` ketika kita menggunakan `fetch()`adalah untuk menunggu hingga proses pemanggilan API atau permintaan jaringan selesai dan hasilnya tersedia sebelum melanjutkan eksekusi kode selanjutnya. `await` digunakan dalam konteks fungsi `async` untuk membuat kode asinkron terlihat seperti kode sinkron, sehingga lebih mudah dipahami dan ditulis.
+
+Jika tidak menggunakan `await`,  `fetch()` tetap akan memulai permintaan HTTP, namun kode JavaScript akan langsung melanjutkan ke baris berikutnya tanpa menunggu hasil dari `fetch()`. Ini bisa menyebabkan bug atau masalah pada logika program, karena kita mungkin mencoba menggunakan hasil `fetch()` sebelum promise selesai.
+Selain itu ketika tidak menggunakan `await`, kita tidak akan menunggu resolusi promise. Jika kita langsung mencoba memproses data dari `fetch()` (seperti memanggil `response.json()`), kita bisa mendapatkan undefined atau kesalahan lainnya karena data belum tersedia.
+Terakhir, tanpa `await`, kita bisa mendapatkan masalah seperti menjalankan kode di luar urutan yang diinginkan. Contohnya, kode lain mungkin akan dijalankan sebelum hasil fetch siap, yang menyebabkan perilaku yang tidak konsisten.
+
+## Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+1. **Melewati Validasi CSRF untuk Permintaan yang Tidak Menggunakan Token:** Django memiliki perlindungan CSRF yang secara default diaktifkan untuk semua request POST. Perlindungan CSRF ini memastikan bahwa setiap permintaan POST yang dibuat oleh klien (browser) ke server Django adalah permintaan yang sah.
+2. **Menghindari Error CSRF Token Mismatch:** Jika CSRF token tidak dikirim atau tidak valid pada permintaan AJAX POST, Django akan menolak permintaan dengan memberikan HTTP 403 Forbidden sebagai respons.
+3. **Mempermudah Pengujian dan Prototyping:** Selama tahap pengembangan, terutama ketika membuat prototipe atau pengujian, menambahkan csrf_exempt bisa membantu mempercepat proses karena kita tidak perlu memikirkan pengelolaan CSRF token untuk setiap permintaan AJAX POST. 
+
+## Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+Dari sisi keamanan, Frontend tidak bisa dipercaya sepenuhnya, karena meskipun validasi dan pembersihan data dilakukan di frontend (misalnya menggunakan JavaScript atau HTML5), pengguna masih bisa memanipulasi data yang dikirim ke server. Mereka dapat mematikan JavaScript, memodifikasi form melalui Developer Tools, atau bahkan mengirim request langsung ke server tanpa melalui halaman frontend.
+
+Data yang masuk harus konsisten: Jika pembersihan hanya dilakukan di frontend, tidak ada jaminan bahwa data yang diterima server telah sesuai dengan validasi yang diharapkan. Backend perlu memastikan bahwa data yang masuk ke dalam sistem sesuai dengan standar yang telah ditetapkan, seperti format tanggal yang benar, tipe data yang sesuai (misalnya, angka harus dalam format numerik), atau panjang input yang tidak melebihi batas.
+
+</details>
